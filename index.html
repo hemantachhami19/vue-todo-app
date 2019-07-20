@@ -9,12 +9,12 @@
 </head>
 <body>
 
-<h1>Simple Todo App</h1>
 
 <div class="todo-list">
+    <h1>Simple Todo App</h1>
     <p v-if="!items.length">No items</p>
     <ul>
-        <li v-for = "item in items">{{item.name}} <a href="#" @click="removeItem(item)">Remove</a></li>
+        <li v-for="item in items">{{item.name}} <a href="#" @click="removeItem(item)">Remove</a></li>
     </ul>
     <input type="text" v-model="item">
     <input type="submit" value="add item" @click="addItem()">
@@ -29,20 +29,25 @@
             item: '',
             items: []
         },
-        methods:{
-            addItem(){
+        methods: {
+            addItem() {
                 var item = {
                     id: Date.now(),
                     name: this.item
-                }
+                };
                 this.items.push(item);
+                localStorage.setItem('items', JSON.stringify(this.items));
             },
-            removeItem(item){
-                newItems = this.items.filter((i)=>{
+            removeItem(item) {
+                newItems = this.items.filter((i) => {
                     return i.id !== item.id;
                 });
-                this.items =newItems;
+                this.items = newItems;
+                localStorage.setItem('items', JSON.stringify(this.items));
             }
+        },
+        mounted: function () {
+            this.items = JSON.parse(localStorage.getItem('items')) || [];
         }
     });
 
